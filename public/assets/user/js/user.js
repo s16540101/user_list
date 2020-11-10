@@ -2,7 +2,6 @@ var User_manager = function(){
     var user_default = {account:null, password:null, user_name:null, user_sex:null, user_birthday:null, user_email:null, user_note:null}
     this.user_insert = function(user_register_option, callback){
         let insert_data = $.extend(user_default, user_register_option);
-        console.log(insert_data);
         let status = this._check_save(insert_data)
         if(status.status == 0){
             let error_str = '';
@@ -29,16 +28,51 @@ var User_manager = function(){
         }
         
     },
-    this.user_update = function(user_reigster_option, callback){
-
+    this.user_reset = function(user_update_option, callback){
+        let update_data = $.extend(user_default, user_update_option);
+        if(!update_data.account){
+            error_message("無法確定帳號");
+            return false;
+        }
+        $.ajax({
+            type:'put',
+            url:base_url() + 'admin/userResetPassword',
+            dataType:'json',
+            data:update_data,
+            error:function(){
+                error_message("發生未知錯誤");
+            },
+            success:function(res){
+                if(typeof(callback) == 'function'){
+                    callback(res);
+                }
+            }
+        });
     },
 
     this.user_search = function(){
 
     },
 
-    this.user_delete = function(){
-
+    this.user_delete = function(account, callback){
+        if(!account){
+            error_message("無法確定帳號");
+            return false;
+        }
+        $.ajax({
+            type:'delete',
+            url:base_url() + 'admin/userDelete',
+            dataType:'json',
+            data:{'account' : account},
+            error:function(){
+                error_message("發生未知錯誤");
+            },
+            success:function(res){
+                if(typeof(callback) == 'function'){
+                    callback(res);
+                }
+            }
+        });
     },
     this.user_login = function(account, password, callback){
         if(!account || !password){

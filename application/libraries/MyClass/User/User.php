@@ -55,8 +55,71 @@ class User{
         return $message; 
     }
 
-    public function updateUser(){
+    /**
+     * reset user password
+     * 
+     * @param string $account 要更新的user帳號
+     * @param array $update_info 要更新的資料
+     * 
+     * @return array
+     */
+    public function userResetPassword($account, $update_info):array{
+        $message = array('status' => 1, 'error_message' => '', 'user_id' => null);
+        if(!$account){
+            $message['status'] = 0;
+            $message['error_message'] = '未輸入帳號';
+        }
+        else{
+            $search_user_info = $this->CI->user_model->searchUser($account);
+            if($search_user_info->num_rows() <= 0){
+                $message['status'] = 0;
+                $message['error_message'] = '查無使用者帳號';
+            }
+            else{
+                //設定不可更新欄位
+                $check_fields = array('account', 'user_id');
+                foreach($update_info as $update_key => $update_value){
+                    if(in_array($update_key, $check_fields)){
+                        unset($update_info[$update_key]);
+                    }
+                }
 
+                if(count((array)$update_info) > 0){
+                    $this->CI->user_model->userUpdate($account, $update_info);
+                }
+                else{
+                    $message['status'] = 0;
+                    $message['error_message'] = '無更新任何資料';
+                }
+            }
+        }
+        return $message;
+    }
+
+    /**
+     * 刪除使用者
+     * @param string $account
+     * 
+     * @return array
+     */
+    public function userDelete($account):array{
+        $message = array('status' => 1, 'error_message' => '', 'user_id' => null);
+        if(!$account){
+            $message['status'] = 0;
+            $message['error_message'] = '未輸入帳號';
+        }
+        else{
+            $search_user_info = $this->CI->user_model->searchUser($account);
+            if($search_user_info->num_rows() <= 0){
+                $message['status'] = 0;
+                $message['error_message'] = '查無使用者帳號';
+            }
+            else{
+                $this->CI->user_model->userDelete($account);
+            }
+        }
+
+        return $message;
     }
 
     /**

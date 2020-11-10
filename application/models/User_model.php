@@ -16,4 +16,14 @@ class User_model extends CI_Model{
         $this->db->insert('account_info', $user_info);
         return $this->db->insert_id();
     }
+
+    function userUpdate($account, $update_info){
+        $this->db->where("account", $account);
+        $this->db->update("account_info", $update_info);
+    }
+
+    function userDelete($account){
+        $this->db->where("account", $account);
+        $this->db->delete("account_info");
+    }
 }
