@@ -38,7 +38,7 @@ class User{
         //檢查是否有重複帳號
         $search_user_info = $this->CI->user_model->searchUser($user_info['account']);
         if($search_user_info->num_rows() <= 0){
-            $user_id = $this->CI->user_model->insertUsers($user_info);
+            $user_id = $this->CI->user_model->insertUser($user_info);
             if(!$user_id){
                 $message['status'] = 0;
                 $message['error_message'] = '新增使用者發生錯誤';
