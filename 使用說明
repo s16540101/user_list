@@ -1,0 +1,17 @@
+setp1:
+
+安裝完nginx後，將程式路徑指向public
+EX:/home/asu01/www/user_list/public
+
+setp2:
+
+請將 appliction/config/database.example.php 複製一份修改為 database.php
+並將database.php 設定好
+
+setp3:
+
+在網頁執行 base_url/migrate/latest
+EX: http://localhost/migrate/latest
+或是將 account_info 匯入
+
+END
