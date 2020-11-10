@@ -45,5 +45,26 @@ class Admin extends Base{
 
         echo json_encode($message);
     }
+
+    public function outputUserExcel(){
+        $this->load->library("excel");
+        $user_list = $this->user_class->searchUser()->result_array();
+        $excel = array();
+        array_push($excel, array(array("data" => "帳號"), array("data" => "姓名"), array("data" => '性別'), array("data" => "生日"), array("data" => 'Email'), array("data" => "備註")));
+        foreach($user_list as $key => $value){
+            $col = array(
+                array("data" => $value['account']),
+                array("data" => $value['name']),
+                array("data" => ($value['sex'] == 1) ? '男' : '女'),
+                array("data" => $value['birthday']),
+                array("data" => $value['email']),
+                array("data" => $value['note'])
+            );
+
+            array_push($excel, $col);
+        }
+
+        $this->excel->arrayToExcel($excel, 'user_list');
+    }
 }
 ?>

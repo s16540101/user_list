@@ -127,7 +127,7 @@ class User{
      * 
      * @param string $account
      * 
-     * @return array
+     * @return object
      */
     public function searchUser($account = null):object{
         $user_list = $this->CI->user_model->searchUser($account);

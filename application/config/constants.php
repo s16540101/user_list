@@ -84,5 +84,17 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
+/*
+|--------------------------------------------------------------------------
+| 使用者性別
+|--------------------------------------------------------------------------
+ */
 defined('USER_SEX_WOMAN')      OR define('USER_SEX_WOMAN', 0); //註冊性別選項 女
 defined('USER_SEX_MAN')      OR define('USER_SEX_MAN', 1); //註冊性別選項 男
+
+/*
+|--------------------------------------------------------------------------
+| Excel extention(統一管理系統匯出之 Excel 的副檔名)
+|--------------------------------------------------------------------------
+ */
+defined('EXCEL_EXTENTION') or define('EXCEL_EXTENTION', '.xlsx'); // 匯出之Excel副檔名

@@ -20,7 +20,7 @@
                                 <th>備註</th>
                                 <th>
                                     <input type='button' class='btn btn-primary btn-excel-upload btn-sm' value='EXCEL匯入'>
-                                    <input type='button' class='btn btn-success btn-excel-output btn-sm' value='EXCEL匯出'>
+                                    <input type='button' class='btn btn-success btn-excel-output btn-sm' value='EXCEL匯出' onclick='<?=base_url("admin/outputUserExcel")?>'>
                                 </th>
                             </tr>
                         </thead>
