@@ -14,7 +14,7 @@ var User_manager = function(){
         else{
             $.ajax({
                 type:'post',
-                url:base_url() + 'home/user_insert',
+                url:base_url() + 'home/userInsert',
                 dataType:'json',
                 data:insert_data,
                 error:function(res){

@@ -8,8 +8,8 @@ class Admin extends Base{
     }
 
     public function index(){
-        $result = $this->user_class->searchUser()->result_array();
-        $data['result'] = $result;
+        $user_list = $this->user_class->searchUser()->result_array();
+        $data['user_list'] = $user_list;
         $this->layout->view("user_list", $data);
     }
 }
