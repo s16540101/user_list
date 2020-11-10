@@ -1,9 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once 'User.php';
-
-use MyClass\User\UserLogin;
-
 class Home extends User {
     
     function __construct(){
@@ -19,15 +16,20 @@ class Home extends User {
         $this->layout->view("register");
     }
 
+    /**
+     * 登入
+     */
     public function login(){
         $account = $this->input->post('account');
         $password = $this->input->post("password");
 
-        $user_login = new UserLogin();
-        $message = $user_login->loginUser($account, $password);
+        $message = $this->user_login_class->loginUser($account, $password);
         echo json_encode($message);
     }
 
+    /**
+     * register user
+     */
     public function userInsert(){
         $user_info = array(
                         "account" => $this->input->post("account"),
@@ -39,7 +41,7 @@ class Home extends User {
                         "note" => $this->input->post("user_note")
                     );
         
-        $message = $this->insertUser($user_info);
+        $message = $this->user_class->insertUser($user_info);
         echo json_encode($message);
     }
 }
