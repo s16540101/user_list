@@ -26,7 +26,7 @@ class Admin extends Base{
             parse_str(file_get_contents("php://input"), $put);
             $account = (isset($put['account'])) ? $put['account'] : null;
         }
-        $update_info = array("password" => $account);
+        $update_info = array("password" => md5($account));
         $message = $this->user_class->userResetPassword($account, $update_info);
         echo json_encode($message);
     }
