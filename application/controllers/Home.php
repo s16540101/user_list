@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require_once 'User.php';
-class Home extends User {
+require_once 'Base.php';
+class Home extends Base {
     
     function __construct(){
         parent::__construct();

@@ -1,7 +1,7 @@
 <?php
 use MyClass\User\User as NameUser;
 use MyClass\User\UserLogin;
-class User extends CI_Controller{
+class Base extends CI_Controller{
     protected $user_class;
     protected $user_login;
 
