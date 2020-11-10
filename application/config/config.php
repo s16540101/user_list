@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-
-$config['base_url'] =  "http://{$_SERVER['SERVER_NAME']}/";
+$default_domain = (is_cli()) ? '127.0.0.1' : "http://".$_SERVER['SERVER_NAME'];
+$config['base_url'] =  $default_domain;
 
 /*
 |--------------------------------------------------------------------------

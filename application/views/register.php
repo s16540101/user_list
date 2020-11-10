@@ -26,9 +26,38 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" onclick="location.href='<?=base_url()?>'">取消</button>
-                    <button type="button" class="btn btn-primary">註冊</button>
+                    <button type="button" class="btn btn-primary" onclick='register_user()'>註冊</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type='text/javascript'>
+    
+    function register_user(){
+        let user_manager = new User_manager();
+        let user_data = {
+            account:$("input[name='uesr_account']").val(),
+            password:$("input[name='user_passwd']").val(),
+            user_name:$("input[name='user_name']").val(),
+            user_sex:$("select[name='user_sex']").val(),
+            user_birthday:$("input[name='user_birthday']").val(),
+            user_email:$("input[name='user_email']").val(),
+            user_note:$("textarea[name='user_note']").val(),
+        }
+        confirm_message('註冊帳號', "是否確定註冊新帳號?", null, function(res){
+            if(res){
+                user_manager.user_insert(user_data, function(res){
+                    if(res.status == 1){
+                        normal_message("新增使用者", "已新增完成", function(){
+                            location.href=base_url();
+                        });
+                    }
+                    else{
+                        error_message(res.error_message);
+                    }
+                });
+            }
+        })
+    }
+</script>
