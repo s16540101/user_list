@@ -27,7 +27,7 @@ class Admin extends Base{
             $account = (isset($put['account'])) ? $put['account'] : null;
         }
         $update_info = array("password" => md5($account));
-        $message = $this->user_class->userResetPassword($account, $update_info);
+        $message = $this->user_class->userUpdateInfo($account, $update_info);
         echo json_encode($message);
     }
 
@@ -65,6 +65,77 @@ class Admin extends Base{
         }
 
         $this->excel->arrayToExcel($excel, 'user_list');
+    }
+
+    /**
+     * 使用者EXCEL匯入
+     */
+    public function userImportExcel(){
+        $message = array('status' => 1, 'error_message' => '');
+        if(isset($_FILES['excel_file']) && count((array) $_FILES['excel_file']) > 0){
+            $this->load->library("excel");
+            $file_path = $_FILES['excel_file']['tmp_name'];
+            $objWorksheet = $this->excel->getExcelObj($file_path);
+            $excel_check_title = array("帳號", "密碼", "姓名", "性別", "生日", "Email", "備註");
+            $highestRow = $objWorksheet->getHighestRow();
+            $highestColumn = $objWorksheet->getHighestColumn();
+            $headingsArray = $objWorksheet->rangeToArray('A1:'.$highestColumn.'1',null, true, true, true);
+
+            for ($row = 1; $row <= $highestRow; $row++) {
+                $dataRow = $objWorksheet->rangeToArray('A'.$row.':'.$highestColumn.$row,null, true, true, true);
+                switch($row){
+                    case 1:
+                        $check_data_key = 0;
+                        foreach($dataRow[$row] as $key => $value) {
+                            if($excel_check_title[$check_data_key] != $value){
+                                $message['status'] = 0;
+                                $message['error_message'] = '請確認匯入EXCEL第一行是否依序為'.implode(',', $excel_check_title);
+                                break;
+                            } 
+                            $check_data_key++;
+                        }
+                    break;
+                    default:
+                        $excel_user_info = array(
+                            'account' => trim($dataRow[$row]['A']),
+                            'password' => trim($dataRow[$row]['B']),
+                            'name' => trim($dataRow[$row]['C']),
+                            'sex' => trim($dataRow[$row]['D']),
+                            'birthday' => trim($dataRow[$row]['E']),
+                            'email' => trim($dataRow[$row]['F']),
+                            'note' => trim($dataRow[$row]['G'])
+                        );
+                        if($excel_user_info['account']){
+                            $user_account = $excel_user_info['account'];
+                            $excel_user_info['password'] = md5($excel_user_info['password']);
+                            $excel_user_info['sex'] = ($excel_user_info['sex'] == '男') ? 1 : 0;
+                            $excel_user_info['birthday'] = date('Y-m-d', strtotime($excel_user_info['birthday']));
+
+                            $search_user_info = $this->user_class->searchUser($user_account);
+                            if($search_user_info->num_rows() <= 0){
+                                $this->user_class->insertUser($excel_user_info);
+                            }
+                            else{
+                                unset($excel_user_info['account']);
+                                $this->user_class->userUpdateInfo($user_account, $excel_user_info);
+                            }
+                        }
+                        else{
+                            $message['status'] = 0;
+                            $message['error_message'] = '第'.$row."行帳號未輸入";
+                        }
+                }
+
+                //檢查TITLE順序標題不對中斷迴圈
+                if($message['status'] == 0)
+                    break;
+            }
+        }
+        else{
+            $message['status'] = 0;
+            $message['error_message'] = '上傳檔案失敗';
+        }
+        echo json_encode($message);
     }
 }
 ?>

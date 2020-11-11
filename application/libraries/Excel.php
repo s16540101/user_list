@@ -420,4 +420,25 @@ class Excel
     {
         return \PHPExcel\Shared\Date::ExcelToPHP($value);
     }
+
+    /**
+     * 取得讀取Excel的物件 
+     *
+     * @param string $file_path 上傳EXCEL檔案路徑
+     * 
+     */
+    function getExcelObj($file_path){
+        $inputFileName = $file_path;
+        $inputFileType = \PHPExcel\IOFactory::identify($inputFileName);
+        /**  Create a new Reader of the type that has been identified  **/
+        $objReader = \PHPExcel\IOFactory::createReader($inputFileType);
+        /** Set read type to read cell data onl **/
+        //$objReader->setReadDataOnly(true);
+        /**  Load $inputFileName to a PHPExcel Object  **/
+        $objPHPExcel = $objReader->load($inputFileName);
+        //Get worksheet and built array with first row as header
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+
+        return $objWorksheet;
+    }
 }

@@ -19,9 +19,8 @@
                                 <th>電子信箱</th>
                                 <th>備註</th>
                                 <th>
-                                    <?/*
-                                    <input type='button' class='btn btn-primary btn-excel-upload btn-sm' value='EXCEL匯入'>
-                                    */?>
+                                    <input type='file' name='excel_file' style='display:none;'>
+                                    <input type='button' class='btn btn-primary btn-excel-upload btn-sm' value='EXCEL匯入' onclick='file_select()'>
                                     <input type='button' class='btn btn-success btn-excel-output btn-sm' value='EXCEL匯出' onclick="location.href='<?=base_url("admin/outputUserExcel")?>'">
                                 </th>
                             </tr>
@@ -33,7 +32,7 @@
                                     <td><?=$value['account'];?></td>
                                     <td><?=$value['name'];?></td>
                                     <td><?=$value['sex'] == 1 ? '男' : '女';?></td>
-                                    <td><?=date('Y年m月d日s', strtotime($value['birthday']));?></td>
+                                    <td><?=date('Y年m月d日', strtotime($value['birthday']));?></td>
                                     <td><?=$value['email'];?></td>
                                     <td><?=$value['note'];?></td>
                                     <td>
@@ -85,6 +84,53 @@
                 }
             });
         });
+
+        $("input[name='excel_file']").on("change", function(){
+            let obj = this;
+            confirm_message("匯入使用者", "是否確定匯入使用者?", null, function(res){
+                if(res){
+                    let check_file_ext = new Array(".xlsx", ".xls");
+                    if(obj.files.length > 0){
+                        let file = obj.files[0];
+                        let file_ext = file.name.substring(file.name.lastIndexOf('.'));
+                        if (check_file_ext.indexOf(file_ext) < 0) {
+                            error_message("Excel上傳只支援.xlsx，.xls");
+                            $(obj).val('');
+                        }
+                        else{
+                            var form_data = new FormData();
+                            form_data.append("excel_file", file);
+                            $.ajax({
+                                type:'post',
+                                url:base_url() + 'admin/userImportExcel',
+                                data:form_data,
+                                dataType:'json',
+                                processData: false, 
+                                contentType: false,
+                                error:function(){
+                                    error_message("上傳失敗");
+                                    $(obj).val('');
+                                },
+                                success:function(res){
+                                    if(res.status == 1){
+                                        normal_message('匯入使用者', "已匯入完成", function(){
+                                            location.href=location.href;
+                                        });
+                                    }
+                                    else{
+                                        error_message(res.error_message);
+                                    }
+                                    $(obj).val('');
+                                }
+                            })       
+                        }
+                    }
+                }
+                else{
+                    $(obj).val('');
+                }
+            });
+        })
     });
 
     function logout(){
@@ -98,5 +144,9 @@
                 location.href=location.href; 
             }
         });
+    }
+
+    function file_select(){
+        $("input[name='excel_file']").click();
     }
 </script>

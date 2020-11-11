@@ -24,7 +24,7 @@ class User{
             'password' => (isset($user_info['password']) && $user_info['password']) ? md5($user_info['password']) : null,
             'birthday' => (isset($user_info['birthday']) && $user_info['birthday']) ? date('Y-m-d', strtotime($user_info['birthday'])) : null,
             'email' => (isset($user_info['email']) && $user_info['email']) ? $user_info['email'] : null,
-            'name' => (isset($user_info['name']) && $user_info['name'] !== null) ? $user_info['name'] : null,
+            'name' => (isset($user_info['name']) && $user_info['name'] !== null) ? $user_info['name'] : '',
             'sex' => (isset($user_info['sex']) && $user_info['sex'] !== null) ? $user_info['sex'] : 0,
             'note' => (isset($user_info['note']) && $user_info['note']) ? $user_info['note'] : null
         );
@@ -63,7 +63,7 @@ class User{
      * 
      * @return array
      */
-    public function userResetPassword($account, $update_info):array{
+    public function userUpdateInfo($account, $update_info):array{
         $message = array('status' => 1, 'error_message' => '', 'user_id' => null);
         if(!$account){
             $message['status'] = 0;
