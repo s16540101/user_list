@@ -49,11 +49,9 @@ var User_manager = function(){
             }
         });
     },
-
     this.user_search = function(){
 
     },
-
     this.user_delete = function(account, callback){
         if(!account){
             error_message("無法確定帳號");
@@ -94,6 +92,28 @@ var User_manager = function(){
                 }
             })
         }
+    },
+    this.batch_delete_account = function(account, callback){
+        if(account.length <= 0){
+            error_message("選擇任何帳號");
+            return false;
+        }
+
+        $.ajax({
+            type:'delete',
+            url:base_url() + 'admin/userBatchDelete',
+            dataType:'json',
+            data:{'account' : account},
+            error:function(){
+                error_message("發生未知錯誤");
+            },
+            success:function(res){
+                if(typeof(callback) == 'function'){
+                    callback(res);
+                }
+            }
+        });
+
     },
     this._check_save = function(check_data){
         let account_rule = /^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$/;

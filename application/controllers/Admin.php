@@ -46,6 +46,21 @@ class Admin extends Base{
         echo json_encode($message);
     }
 
+    public function userBatchDelete(){
+        $request_method = $this->input->server(array('REQUEST_METHOD'));
+        $account = null;
+        //處理 REQUEST_METHOD 為 put部分
+        if($request_method['REQUEST_METHOD'] == 'DELETE'){
+            $delete = array();
+            parse_str(file_get_contents("php://input"), $delete);
+            $account = (isset($delete['account'])) ? $delete['account'] : null;
+        }
+
+        $message = $this->user_class->userBatchDelete($account);
+
+        echo json_encode($message);
+    }
+
     public function outputUserExcel(){
         $this->load->library("excel");
         $user_list = $this->user_class->searchUser()->result_array();
@@ -107,7 +122,6 @@ class Admin extends Base{
                         );
                         if($excel_user_info['account']){
                             $user_account = $excel_user_info['account'];
-                            $excel_user_info['password'] = md5($excel_user_info['password']);
                             $excel_user_info['sex'] = ($excel_user_info['sex'] == '男') ? 1 : 0;
                             $excel_user_info['birthday'] = date('Y-m-d', strtotime($excel_user_info['birthday']));
 
@@ -117,6 +131,7 @@ class Admin extends Base{
                             }
                             else{
                                 unset($excel_user_info['account']);
+                                $excel_user_info['password'] = md5($excel_user_info['password']);
                                 $this->user_class->userUpdateInfo($user_account, $excel_user_info);
                             }
                         }

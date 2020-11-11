@@ -123,6 +123,26 @@ class User{
     }
 
     /**
+     * 批次刪除使用者
+     * @param string $account
+     * 
+     * @return array
+     */
+    public function userBatchDelete($account):array{
+        $message = array('status' => 1, 'error_message' => '', 'user_id' => null);
+        $account = (array)$account;
+        if(count($account) > 0){
+            $this->CI->user_model->userBatchDelete($account);
+        }
+        else{
+            $message['status'] = 0;
+            $message['error_message'] = '未輸入帳號';
+        }
+
+        return $message;
+    }
+
+    /**
      * 查詢使用者資訊
      * 
      * @param string $account

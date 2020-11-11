@@ -11,7 +11,10 @@
                     <table class='table table-bordered'>
                         <thead>
                             <tr>
-                                <th>使用者ID</th>
+                                <th style='width:10%'>
+                                    <input type='button' class='btn btn-danger btn-select-delete-user' value='選取刪除'>
+                                </th>
+                                <th style='width:5%'>ID</th>
                                 <th>帳號</th>
                                 <th>姓名</th>
                                 <th>性別</th>
@@ -20,14 +23,15 @@
                                 <th>備註</th>
                                 <th>
                                     <input type='file' name='excel_file' style='display:none;'>
-                                    <input type='button' class='btn btn-primary btn-excel-upload btn-sm' value='EXCEL匯入' onclick='file_select()'>
-                                    <input type='button' class='btn btn-success btn-excel-output btn-sm' value='EXCEL匯出' onclick="location.href='<?=base_url("admin/outputUserExcel")?>'">
+                                    <input type='button' class='btn btn-primary btn-excel-upload btn-sm' value='匯入' onclick='file_select()'>
+                                    <input type='button' class='btn btn-success btn-excel-output btn-sm' value='匯出' onclick="location.href='<?=base_url("admin/outputUserExcel")?>'">
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?foreach($user_list as $key => $value):?>
                                 <tr data-account='<?=$value['account']?>'>
+                                    <td><input type='checkbox' class="checkbox-user"></td>
                                     <td><?=$value['user_id'];?></td>
                                     <td><?=$value['account'];?></td>
                                     <td><?=$value['name'];?></td>
@@ -85,6 +89,7 @@
             });
         });
 
+        //EXCLE檔案上傳
         $("input[name='excel_file']").on("change", function(){
             let obj = this;
             confirm_message("匯入使用者", "是否確定匯入使用者?", null, function(res){
@@ -130,7 +135,28 @@
                     $(obj).val('');
                 }
             });
-        })
+        });
+
+        $(".btn-select-delete-user").on("click", function(){
+            let account = new Array();
+            $("input.checkbox-user:checked").each(function(k){
+                account[k] = $(this).parents("tr:first").data("account");
+            });
+            if(account.length > 0){
+                confirm_message("刪除使用者", "是否確定刪除使用者?", null, function(res){
+                    user_manager.batch_delete_account(account, function(res){
+                        if(res.status == 1){
+                            normal_message('刪除使用者', "已刪除完成", function(){
+                                location.href=location.href;
+                            });
+                        }
+                        else{
+                            error_message(res.error_message);
+                        }
+                    });
+                });
+            }
+        });
     });
 
     function logout(){
